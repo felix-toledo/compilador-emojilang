@@ -105,3 +105,19 @@ Para información completa sobre el lenguaje, sintaxis y ejemplos, consulta:
 - **JavaScript ES6+** - Lógica del compilador
 - **D3.js** - Visualización del AST
 - **Arquitectura modular** - Código organizado y mantenible
+
+## 🤖 Desarrollo con Cursor
+
+Este proyecto fue desarrollado utilizando **Cursor**, un IDE inteligente que combina las capacidades de programación asistida por IA con un entorno de desarrollo moderno. Cursor facilitó significativamente el proceso de desarrollo al proporcionar:
+
+- **Asistencia de código inteligente** para la implementación de algoritmos de compilación
+- **Generación automática** de código para las fases de análisis léxico y sintáctico
+- **Sugerencias contextuales** para optimizar la arquitectura modular
+- **Debugging asistido** para resolver problemas complejos de parsing
+- **Documentación automática** y comentarios explicativos
+
+### 👨‍💻 Autor
+
+**Felix** - Desarrollador y entusiasta de la programación educativa
+
+Este proyecto representa una exploración práctica de los conceptos fundamentales de compiladores, diseñado específicamente para fines educativos y demostrativos. La combinación de Cursor como herramienta de desarrollo y un enfoque visual con emojis hace que el aprendizaje de compiladores sea más accesible y entretenido.
