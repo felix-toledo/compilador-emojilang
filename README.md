@@ -116,8 +116,3 @@ Este proyecto fue desarrollado utilizando **Cursor**, un IDE inteligente que com
 - **Debugging asistido** para resolver problemas complejos de parsing
 - **Documentación automática** y comentarios explicativos
 
-### 👨‍💻 Autor
-
-**Felix** - Desarrollador y entusiasta de la programación educativa
-
-Este proyecto representa una exploración práctica de los conceptos fundamentales de compiladores, diseñado específicamente para fines educativos y demostrativos. La combinación de Cursor como herramienta de desarrollo y un enfoque visual con emojis hace que el aprendizaje de compiladores sea más accesible y entretenido.
