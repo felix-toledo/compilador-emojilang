@@ -1,0 +1,8 @@
+# Ejemplo: Variables y operaciones
+🧱 nombre = "Juan"
+🧱 edad = 25
+🧱 altura = 1.75
+
+🖨️("Hola " ➕ nombre)
+🖨️("Tienes " ➕ edad ➕ " años")
+🖨️("Tu altura es " ➕ altura ➕ " metros") 

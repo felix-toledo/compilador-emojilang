@@ -1,0 +1,17 @@
+{
+  "name": "compiladorhtml",
+  "version": "1.0.0",
+  "description": "Un compilador educativo completo que convierte código escrito en emojis a Python, mostrando todas las fases del proceso de compilación de forma visual e interactiva.",
+  "main": "compiler.js",
+  "scripts": {
+    "start": "start index.html",
+    "dev": "start index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "d3": "^7.9.0"
+  }
+}

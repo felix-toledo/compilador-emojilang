@@ -1,0 +1,14 @@
+# Ejemplo: Bucles y condicionales
+🧱 contador = 1
+
+🔄 (contador <= 10) {
+  ❓ (contador % 2 == 0) {
+    🖨️("El número " ➕ contador ➕ " es par")
+  }
+  ❓ (contador % 2 != 0) {
+    🖨️("El número " ➕ contador ➕ " es impar")
+  }
+  contador = contador ➕ 1
+}
+
+🖨️("¡Bucle completado!") 

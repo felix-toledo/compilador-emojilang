@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>EmojiLang Visualizer - Compilador Completo</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    
+    .header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      font-weight: 300;
+    }
+    
+    .header p {
+      margin: 10px 0 0 0;
+      opacity: 0.9;
+      font-size: 1.1em;
+    }
+    
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      min-height: 600px;
+    }
+    
+    .editor-section {
+      padding: 30px;
+      background: #f8f9fa;
+      border-right: 1px solid #e9ecef;
+    }
+    
+    .output-section {
+      padding: 30px;
+      background: white;
+    }
+    
+    .section-title {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .keyboard {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .keyboard button {
+      font-size: 24px;
+      margin: 5px;
+      padding: 10px 15px;
+      border: none;
+      background: #667eea;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .keyboard button:hover {
+      background: #5a6fd8;
+      transform: translateY(-2px);
+    }
+    
+    textarea {
+      width: 100%;
+      height: 200px;
+      font-size: 16px;
+      padding: 15px;
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      font-family: 'Courier New', monospace;
+      resize: vertical;
+      transition: border-color 0.3s ease;
+    }
+    
+    textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    .compile-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: all 0.3s ease;
+    }
+    
+    .compile-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .phases-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .phase {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 20px;
+      border-left: 4px solid #667eea;
+    }
+    
+    .phase h3 {
+      margin: 0 0 15px 0;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .phase-description {
+      background: #e3f2fd;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-left: 4px solid #2196f3;
+    }
+    
+    .phase-description h4 {
+      margin: 0 0 10px 0;
+      color: #1976d2;
+      font-size: 1.1em;
+    }
+    
+    .phase-description p {
+      margin: 0;
+      color: #424242;
+      line-height: 1.5;
+    }
+    
+    .phase pre {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #e9ecef;
+      overflow-x: auto;
+      font-size: 12px;
+      line-height: 1.4;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .ast-container {
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #e9ecef;
+      padding: 20px;
+      margin-top: 15px;
+      overflow: auto;
+      max-height: 400px;
+    }
+    
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .stat-card {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .stat-number {
+      font-size: 2em;
+      font-weight: bold;
+      color: #667eea;
+    }
+    
+    .stat-label {
+      color: #666;
+      font-size: 0.9em;
+      margin-top: 5px;
+    }
+    
+    .errors {
+      background: #fee;
+      border: 1px solid #fcc;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 15px;
+    }
+    
+    .warnings {
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 15px;
+    }
+    
+    .examples {
+      margin-top: 20px;
+    }
+    
+    .example-btn {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+      font-size: 12px;
+    }
+    
+    .example-btn:hover {
+      background: #218838;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+    
+    .success {
+      color: #28a745;
+    }
+    
+    .error {
+      color: #dc3545;
+    }
+    
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .editor-section {
+        border-right: none;
+        border-bottom: 1px solid #e9ecef;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <h1>🧑‍💻 EmojiLang Visualizer</h1>
+      <p>Compilador educativo con todas las fases de compilación</p>
+    </div>
+
+    <div class="main-content">
+      <div class="editor-section">
+        <div class="section-title">
+          📝 Editor de Código
+        </div>
+        
+        <div class="keyboard">
+          <div>Emojis disponibles:</div>
+          <button onclick="insert('🔧')" title="Función - Define una función">🔧</button>
+          <button onclick="insert('🔙')" title="Retorno - Retorna un valor de una función">🔙</button>
+          <button onclick="insert('❓')" title="Condicional - Inicia una condición if">❓</button>
+          <button onclick="insert('🔄')" title="Bucle - Inicia un bucle while">🔄</button>
+          <button onclick="insert('🧱')" title="Variable - Declara una variable">🧱</button>
+          <button onclick="insert('➕')" title="Suma - Operador de suma">➕</button>
+          <button onclick="insert('➖')" title="Resta - Operador de resta">➖</button>
+          <button onclick="insert('🟢')" title="Multiplicación - Operador de multiplicación">🟢</button>
+          <button onclick="insert('➗')" title="División - Operador de división">➗</button>
+          <button onclick="insert('🖨️')" title="Imprimir - Función para mostrar texto">🖨️</button>
+          <button onclick="insert('🎤')" title="Entrada - Función para leer entrada del usuario">🎤</button>
+          <button onclick="insert('✅')" title="Verdadero - Valor booleano true">✅</button>
+          <button onclick="insert('❌')" title="Falso - Valor booleano false">❌</button>
+        </div>
+        
+        <textarea id="code" placeholder="Escribí tu código EmojiLang aquí...
+
+Ejemplos:
+🖨️('¡Hola Mundo!')
+🧱 x = 10
+🧱 resultado = 5 ➕ 3
+🖨️(resultado)"></textarea>
+        
+        <div class="examples">
+          <div style="margin-bottom: 10px; font-weight: bold;">Ejemplos rápidos:</div>
+          <button class="example-btn" onclick="loadExample('hello')">Hola Mundo</button>
+          <button class="example-btn" onclick="loadExample('variables')">Variables</button>
+          <button class="example-btn" onclick="loadExample('function')">Función</button>
+          <button class="example-btn" onclick="loadExample('conditional')">Condicional</button>
+          <button class="example-btn" onclick="loadExample('loop')">Bucle</button>
+        </div>
+        
+        <button class="compile-btn" onclick="compile()">
+          ▶️ Compilar y Visualizar
+        </button>
+      </div>
+
+      <div class="output-section">
+        <div class="section-title">
+          📊 Fases del Compilador
+        </div>
+        
+        <div id="loading" class="loading" style="display: none;">
+          ⏳ Compilando...
+        </div>
+        
+        <div id="phases" class="phases-container">
+          <div class="phase">
+            <h3>🔤 1. Análisis Léxico (Tokens)</h3>
+            <div class="phase-description">
+              <h4>¿Qué hace esta fase?</h4>
+              <p>El analizador léxico convierte el código fuente en una secuencia de tokens (unidades léxicas). Cada token representa un elemento básico del lenguaje como palabras clave, identificadores, operadores, literales, etc. Esta fase es la primera en el proceso de compilación y prepara los datos para el análisis sintáctico.</p>
+            </div>
+            <pre id="tokens">Ingresa código y presiona "Compilar" para ver los tokens...</pre>
+          </div>
+
+          <div class="phase">
+            <h3>🌳 2. Análisis Sintáctico (AST)</h3>
+            <div class="phase-description">
+              <h4>¿Qué hace esta fase?</h4>
+              <p>El analizador sintáctico toma los tokens y construye un Árbol de Sintaxis Abstracta (AST). Este árbol representa la estructura jerárquica del programa, mostrando cómo se relacionan las diferentes partes del código. Cada nodo del árbol representa una construcción del lenguaje (expresiones, declaraciones, etc.).</p>
+            </div>
+            <div id="ast-container" class="ast-container">
+              <p>El gráfico del árbol AST aparecerá aquí...</p>
+            </div>
+            <pre id="ast-text">Representación textual del AST...</pre>
+          </div>
+
+          <div class="phase">
+            <h3>🔍 3. Análisis Semántico</h3>
+            <div class="phase-description">
+              <h4>¿Qué hace esta fase?</h4>
+              <p>El analizador semántico verifica que el programa tenga sentido lógico. Valida tipos de datos, verifica que las variables estén declaradas antes de usarse, construye la tabla de símbolos, y detecta errores como variables no declaradas, tipos incompatibles, o funciones llamadas con argumentos incorrectos.</p>
+            </div>
+            <pre id="semantic">Tabla de símbolos y validaciones semánticas...</pre>
+          </div>
+
+          <div class="phase">
+            <h3>⚙️ 4. Código Intermedio</h3>
+            <div class="phase-description">
+              <h4>¿Qué hace esta fase?</h4>
+              <p>El generador de código intermedio convierte el AST en una representación intermedia más simple y uniforme. Esta representación es independiente de la máquina y facilita las optimizaciones posteriores. Cada instrucción intermedia es una operación básica que puede ser fácilmente traducida al código final.</p>
+            </div>
+            <pre id="intermediate">Pseudocódigo intermedio...</pre>
+          </div>
+
+          <div class="phase">
+            <h3>🚀 5. Optimización</h3>
+            <div class="phase-description">
+              <h4>¿Qué hace esta fase?</h4>
+              <p>El optimizador mejora el código intermedio para hacerlo más eficiente. Aplica técnicas como eliminación de código muerto, propagación de constantes, simplificación de expresiones, y otras optimizaciones que mejoran el rendimiento sin cambiar la funcionalidad del programa.</p>
+            </div>
+            <pre id="optimized">Código optimizado...</pre>
+          </div>
+
+          <div class="phase">
+            <h3>🐍 6. Código Python Final</h3>
+            <div class="phase-description">
+              <h4>¿Qué hace esta fase?</h4>
+              <p>El generador de código final traduce el código intermedio optimizado al lenguaje objetivo (Python en este caso). Esta es la última fase del compilador y produce código ejecutable que puede ser interpretado por Python. El código generado mantiene la funcionalidad del programa original pero en la sintaxis del lenguaje objetivo.</p>
+            </div>
+            <pre id="python">Código Python ejecutable...</pre>
+          </div>
+        </div>
+        
+        <div id="stats" class="stats" style="display: none;">
+          <!-- Estadísticas se agregarán dinámicamente -->
+        </div>
+        
+        <div id="errors" class="errors" style="display: none;">
+          <!-- Errores se mostrarán aquí -->
+        </div>
+        
+        <div id="warnings" class="warnings" style="display: none;">
+          <!-- Advertencias se mostrarán aquí -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cargar D3.js -->
+  <script src="node_modules/d3/dist/d3.min.js"></script>
+  
+  <!-- Scripts del compilador -->
+  <script src="src/analysis/lexer.js"></script>
+  <script src="src/analysis/parser.js"></script>
+  <script src="src/analysis/semantic.js"></script>
+  <script src="src/generation/intermediate.js"></script>
+  <script src="src/optimization/optimizer.js"></script>
+  <script src="src/generation/generator.js"></script>
+  <script src="src/generation/simple_generator.js"></script>
+  <script src="src/core/compiler.js"></script>
+  <script src="src/ui/ast_visualizer.js"></script>
+
+  <script>
+    let compiler = null;
+    let astVisualizer = null;
+    let examples = {
+      'hello': '🖨️("¡Hola Mundo desde EmojiLang!")',
+      'variables': '🧱 nombre = "Juan"\n🧱 edad = 25\n🖨️("Hola " ➕ nombre)\n🖨️("Tienes " ➕ edad ➕ " años")',
+      'function': '🔧 suma(a, b) {\n  🔙 a ➕ b\n}\n🧱 resultado = suma(10, 20)\n🖨️("La suma es: " ➕ resultado)',
+      'conditional': '🧱 numero = 15\n❓ (numero > 10) {\n  🖨️("El número es mayor que 10")\n}',
+      'loop': '🧱 contador = 1\n🔄 (contador <= 5) {\n  🖨️("Contador: " ➕ contador)\n  contador = contador ➕ 1\n}'
+    };
+
+    // Inicializar compilador y visualizador cuando se carga la página
+    window.addEventListener('load', function() {
+      compiler = new EmojiLangCompiler();
+      astVisualizer = new ASTVisualizer();
+      console.log('✅ Compilador EmojiLang inicializado');
+      console.log('✅ Visualizador AST inicializado');
+    });
+
+    function insert(symbol) {
+      const textarea = document.getElementById("code");
+      textarea.value += symbol;
+      textarea.focus();
+    }
+
+    function loadExample(type) {
+      const textarea = document.getElementById("code");
+      textarea.value = examples[type] || '';
+      textarea.focus();
+    }
+
+    function compile() {
+      const code = document.getElementById("code").value;
+      
+      if (!code.trim()) {
+        alert('Por favor, ingresa algún código para compilar.');
+        return;
+      }
+
+      if (!compiler) {
+        alert('El compilador no está inicializado. Recarga la página.');
+        return;
+      }
+
+      // Mostrar loading
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('phases').style.display = 'none';
+      document.getElementById('stats').style.display = 'none';
+      document.getElementById('errors').style.display = 'none';
+      document.getElementById('warnings').style.display = 'none';
+
+      // Compilar en un setTimeout para permitir que se muestre el loading
+      setTimeout(() => {
+        try {
+          const result = compiler.compile(code);
+          
+          // Ocultar loading
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('phases').style.display = 'flex';
+          
+          // Mostrar resultados
+          if (result.success) {
+            displayResults(result);
+          } else {
+            displayErrors(result.errors);
+          }
+          
+        } catch (error) {
+          document.getElementById('loading').style.display = 'none';
+          alert('Error durante la compilación: ' + error.message);
+        }
+      }, 100);
+    }
+
+    function displayResults(result) {
+      // Mostrar cada fase
+      for (let i = 0; i < result.steps.length; i++) {
+        const step = result.steps[i];
+        const details = compiler.getStepDetails(i);
+        
+        switch (step.name) {
+          case 'Tokens':
+            document.getElementById('tokens').textContent = details;
+            break;
+          case 'AST':
+            // Mostrar representación textual
+            document.getElementById('ast-text').textContent = details;
+            // Crear visualización gráfica del AST
+            if (astVisualizer && step.data) {
+              astVisualizer.createVisualization('ast-container', step.data);
+            }
+            break;
+          case 'Semantic':
+            document.getElementById('semantic').textContent = details;
+            break;
+          case 'Intermediate':
+            document.getElementById('intermediate').textContent = details;
+            break;
+          case 'Optimized':
+            document.getElementById('optimized').textContent = details;
+            break;
+          case 'Python':
+            document.getElementById('python').textContent = details;
+            break;
+        }
+      }
+
+      // Mostrar estadísticas
+      displayStats(result.statistics);
+
+      // Mostrar errores y advertencias
+      if (result.errors.length > 0) {
+        displayErrors(result.errors);
+      }
+
+      if (result.warnings.length > 0) {
+        displayWarnings(result.warnings);
+      }
+    }
+
+    function displayStats(stats) {
+      const statsContainer = document.getElementById('stats');
+      statsContainer.innerHTML = `
+        <div class="stat-card">
+          <div class="stat-number">${stats.tokens}</div>
+          <div class="stat-label">Tokens</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">${stats.astNodes}</div>
+          <div class="stat-label">Nodos AST</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">${stats.intermediateInstructions}</div>
+          <div class="stat-label">Instrucciones</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">${stats.optimizations}</div>
+          <div class="stat-label">Optimizaciones</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">${stats.pythonLines}</div>
+          <div class="stat-label">Líneas Python</div>
+        </div>
+      `;
+      statsContainer.style.display = 'grid';
+    }
+
+    function displayErrors(errors) {
+      const errorsContainer = document.getElementById('errors');
+      let errorsHtml = '<h4>❌ Errores de Compilación:</h4>';
+      
+      for (const error of errors) {
+        errorsHtml += `<div>• ${error.message}</div>`;
+      }
+      
+      errorsContainer.innerHTML = errorsHtml;
+      errorsContainer.style.display = 'block';
+    }
+
+    function displayWarnings(warnings) {
+      const warningsContainer = document.getElementById('warnings');
+      let warningsHtml = '<h4>⚠️ Advertencias:</h4>';
+      
+      for (const warning of warnings) {
+        warningsHtml += `<div>• ${warning.message}</div>`;
+      }
+      
+      warningsContainer.innerHTML = warningsHtml;
+      warningsContainer.style.display = 'block';
+    }
+
+    // Permitir compilar con Enter
+    document.getElementById('code').addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.key === 'Enter') {
+        compile();
+      }
+    });
+  </script>
+
+</body>
+</html>

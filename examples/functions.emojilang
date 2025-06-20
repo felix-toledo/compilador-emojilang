@@ -1,0 +1,17 @@
+# Ejemplo: Funciones
+🔧 suma(a, b) {
+  🔙 a ➕ b
+}
+
+🔧 factorial(n) {
+  ❓ (n <= 1) {
+    🔙 1
+  }
+  🔙 n ✖️ factorial(n ➖ 1)
+}
+
+🧱 resultado1 = suma(10, 20)
+🧱 resultado2 = factorial(5)
+
+🖨️("La suma es: " ➕ resultado1)
+🖨️("El factorial de 5 es: " ➕ resultado2) 
